@@ -10,13 +10,13 @@ export class InitialTables1750000000000 implements MigrationInterface {
       `CREATE SEQUENCE "SEQ_ROLES" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
+      `CREATE SEQUENCE "SEQ_VISITANTES" START WITH 1 INCREMENT BY 1`,
+    );
+    await queryRunner.query(
       `CREATE SEQUENCE "SEQ_PANELES" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
       `CREATE SEQUENCE "SEQ_MODULOS_PANEL" START WITH 1 INCREMENT BY 1`,
-    );
-    await queryRunner.query(
-      `CREATE SEQUENCE "SEQ_CONTRIBUYENTES" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
       `CREATE SEQUENCE "SEQ_AUDITORIA" START WITH 1 INCREMENT BY 1`,
@@ -100,7 +100,7 @@ export class InitialTables1750000000000 implements MigrationInterface {
       )
     `);
 
-    // Create holder table
+    // Create visitors table
     await queryRunner.query(`
       CREATE TABLE "T_VISITANTES" (
         "ID_VISITANTE" NUMBER DEFAULT "SEQ_VISITANTES".NEXTVAL NOT NULL,
@@ -159,7 +159,6 @@ export class InitialTables1750000000000 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop tables in reverse order (respecting foreign key constraints)
     await queryRunner.query(`DROP TABLE "T_AUDITORIA"`);
-    await queryRunner.query(`DROP TABLE "T_CONTRIBUYENTES"`);
     await queryRunner.query(`DROP TABLE "T_MODULOS_PANEL"`);
     await queryRunner.query(`DROP TABLE "T_PANELES"`);
     await queryRunner.query(`DROP TABLE "T_USUARIOS"`);
@@ -167,7 +166,6 @@ export class InitialTables1750000000000 implements MigrationInterface {
 
     // Drop sequences
     await queryRunner.query(`DROP SEQUENCE "SEQ_AUDITORIA"`);
-    await queryRunner.query(`DROP SEQUENCE "SEQ_CONTRIBUYENTES"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_MODULOS_PANEL"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_PANELES"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_ROLES"`);

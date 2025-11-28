@@ -45,10 +45,10 @@ async function resetSequences(providedDataSource?: DataSource): Promise<void> {
         sequence: 'SEQ_MODULOS_PANEL',
         idColumn: 'ID_MODULOS_PANEL',
       },
-      T_CONTRIBUYENTES: {
-        table: 'T_CONTRIBUYENTES',
-        sequence: 'SEQ_CONTRIBUYENTES',
-        idColumn: 'ID_CONTRIBUYENTES',
+      T_VISITANTES: {
+        table: 'T_VISITANTES',
+        sequence: 'SEQ_VISITANTES',
+        idColumn: 'ID_VISITANTE',
       },
     };
 
