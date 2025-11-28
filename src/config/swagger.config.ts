@@ -20,6 +20,8 @@ export class SwaggerConfigService {
       )
       .addTag('control-audits', 'Operations related to control audits')
       .addTag('authentication', 'Operations related to authentication')
+      .addTag('appointments', 'Operations related to appointments')
+      .addTag('mail', 'Operations related to email sending')
       .addBearerAuth()
       .build();
 

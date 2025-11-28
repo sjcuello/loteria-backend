@@ -34,6 +34,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -51,6 +52,7 @@
     "csv-parser": "^3.2.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
+    "nodemailer": "^7.0.11",
     "oracledb": "^6.8.0",
     "qrcode": "^1.5.4",
     "reflect-metadata": "^0.2.2",
@@ -71,6 +73,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.14",
+    "@types/nodemailer": "^7.0.4",
     "@types/qrcode": "^1.5.6",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.39.0",

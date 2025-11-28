@@ -20,6 +20,7 @@ import { VisitorModule } from './visitor/visitor.module';
 import { AreaModule } from './area/area.module';
 import { AuthModule } from './auth/auth.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { MailModule } from './mail/mail.module';
 
 const modules = [
   AppointmentModule,
@@ -29,6 +30,7 @@ const modules = [
   DatabaseModule,
   HealthModule,
   InternalNotificationModule,
+  MailModule,
   PanelModule,
   PanelModuleModule,
   RoleModule,
