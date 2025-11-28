@@ -13,6 +13,13 @@ export class SwaggerConfigService {
       .addTag('panel-modules', 'Operations related to panel modules')
       .addTag('roles', 'Operations related to roles')
       .addTag('users', 'Operations related to users')
+      .addTag('areas', 'Operations related to areas')
+      .addTag(
+        'internal-notifications',
+        'Operations related to internal notifications',
+      )
+      .addTag('control-audits', 'Operations related to control audits')
+      .addTag('authentication', 'Operations related to authentication')
       .addBearerAuth()
       .build();
 

@@ -5,9 +5,10 @@ import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { RoleModule } from '../role/role.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role]), RoleModule],
+  imports: [TypeOrmModule.forFeature([User, Role]), RoleModule, AuthModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],

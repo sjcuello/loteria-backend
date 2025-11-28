@@ -3,7 +3,13 @@
 import { DataSource } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { JsonData, PanelData, PanelModuleData, SeedConfig } from './interfaces';
+import {
+  AreaData,
+  JsonData,
+  PanelData,
+  PanelModuleData,
+  SeedConfig,
+} from './interfaces';
 import { resetSequences } from './reset-sequences';
 
 export class DatabaseSeeder {
@@ -59,6 +65,7 @@ export class DatabaseSeeder {
 
     try {
       // Seed in order of dependencies
+      await this.seedAreas();
       await this.seedPanels();
       await this.seedPanelModules();
       // Reset sequences after seeding to prevent ID conflicts
@@ -83,6 +90,24 @@ export class DatabaseSeeder {
         panel.name,
         panel.isActive,
         panel.roleId,
+      ],
+    });
+  }
+
+  private async seedAreas(): Promise<void> {
+    await this.genericSeed<AreaData>({
+      tableName: 'T_AREA',
+      fileName: '_area__202508251609.json',
+      dataKey: 'area',
+      emoji: '📁',
+      displayName: 'areas',
+      insertQuery: `INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA", "ACTIVO") VALUES (:1, :2, :3, :4, :5)`,
+      mapToParams: (area: AreaData): (string | number | Date | null)[] => [
+        area.id,
+        area.name,
+        area.description || null,
+        area.codeArea,
+        area.isActive ?? 1,
       ],
     });
   }

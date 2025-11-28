@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../../role/entities/role.entity';
+import { Area } from '../../area/entities/area.entity';
 
 @Entity('T_USUARIOS')
 export class User {
@@ -63,12 +64,43 @@ export class User {
   cuil: string;
 
   @ApiProperty({
+    description: 'Username for login',
+    example: 'jperez',
+    required: true,
+  })
+  @Column({
+    name: 'USERNAME',
+    length: 100,
+    unique: true,
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'User password (hashed)',
+    example: 'hashedPassword123',
+    required: true,
+  })
+  @Column({
+    name: 'PASSWORD',
+    length: 255,
+  })
+  password: string;
+
+  @ApiProperty({
     description: 'User role',
     type: () => Role,
   })
   @ManyToOne(() => Role, { nullable: true })
   @JoinColumn({ name: 'ROL_ID' })
   role: Role;
+
+  @ApiProperty({
+    description: 'User area',
+    type: () => Area,
+  })
+  @ManyToOne(() => Area, area => area.users, { nullable: true })
+  @JoinColumn({ name: 'AREA_ID' })
+  area: Area;
 
   @ApiProperty({
     description: 'User active status (1 for active, 0 for inactive)',

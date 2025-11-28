@@ -17,8 +17,14 @@ import {
 } from './shared/filters';
 import { InternalNotificationModule } from './internal-notification/internal-notification.module';
 import { VisitorModule } from './visitor/visitor.module';
+import { AreaModule } from './area/area.module';
+import { AuthModule } from './auth/auth.module';
+import { AppointmentModule } from './appointment/appointment.module';
 
 const modules = [
+  AppointmentModule,
+  AreaModule,
+  AuthModule,
   ControlAuditModule,
   DatabaseModule,
   HealthModule,

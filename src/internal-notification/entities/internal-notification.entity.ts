@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
-import { Role } from 'src/role/entities/role.entity';
+import { Role } from '../../role/entities/role.entity';
 
 @Entity('T_NOTIFICACIONES_INTERNAS')
 export class InternalNotification {
