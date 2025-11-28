@@ -8,6 +8,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
 import { Visitor } from '../../visitor/entities/visitor.entity';
+import { AppointmentStatus } from '../enums/appointment-status.enum';
 
 @Entity('T_VISITA')
 export class Appointment {
@@ -102,27 +103,18 @@ export class Appointment {
   effectiveEndDate: Date;
 
   @ApiProperty({
-    description:
-      'Indicates if the visit is approved (1 for approved, 0 for not approved)',
-    example: 0,
+    description: 'Status of the appointment',
+    enum: AppointmentStatus,
+    example: AppointmentStatus.PENDIENTE,
   })
   @Column({
-    name: 'APROBADO',
-    type: 'number',
-    width: 1,
-    default: 0,
+    name: 'ESTADO',
+    type: 'varchar2',
+    length: 50,
+    default: AppointmentStatus.PENDIENTE,
     nullable: false,
   })
-  isApproved: number;
-
-  @ApiProperty({
-    description: 'User who approved this appointment',
-    type: () => User,
-    required: false,
-  })
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'APROBADO_POR' })
-  approvedBy: User;
+  status: AppointmentStatus;
 
   @ApiProperty({
     description: 'Creation date',
@@ -176,17 +168,5 @@ export class Appointment {
 
   set instant(value: boolean) {
     this.isInstant = value ? 1 : 0;
-  }
-
-  @ApiProperty({
-    description: 'Approved status as boolean',
-    example: false,
-  })
-  get approved(): boolean {
-    return this.isApproved === 1;
-  }
-
-  set approved(value: boolean) {
-    this.isApproved = value ? 1 : 0;
   }
 }

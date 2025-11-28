@@ -41,6 +41,15 @@ export class CreateVisitorDto {
   cuit: string;
 
   @ApiProperty({
+    description: 'Visitor EMAIL',
+    example: 'john.doe@example.com',
+    required: true,
+  })
+  @IsString()
+  @MaxLength(255)
+  email: string;
+
+  @ApiProperty({
     description: 'User ID who created this record',
     example: 1,
     required: false,

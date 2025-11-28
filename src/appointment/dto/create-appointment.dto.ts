@@ -5,7 +5,9 @@ import {
   IsNumber,
   IsBoolean,
   IsDateString,
+  IsEnum,
 } from 'class-validator';
+import { AppointmentStatus } from '../enums/appointment-status.enum';
 
 export class CreateAppointmentDto {
   @ApiProperty({
@@ -78,23 +80,15 @@ export class CreateAppointmentDto {
   effectiveEndDate?: string;
 
   @ApiProperty({
-    description: 'Indicates if the visit is approved',
-    example: false,
+    description: 'Status of the appointment',
+    enum: AppointmentStatus,
+    example: AppointmentStatus.APROBADO,
     required: false,
-    default: false,
+    default: AppointmentStatus.APROBADO,
   })
-  @IsBoolean()
+  @IsEnum(AppointmentStatus)
   @IsOptional()
-  isApproved?: boolean;
-
-  @ApiProperty({
-    description: 'User ID who approved this appointment',
-    example: 1,
-    required: false,
-  })
-  @IsNumber()
-  @IsOptional()
-  approvedById?: number;
+  status?: AppointmentStatus;
 
   @ApiProperty({
     description: 'User ID who created this record',

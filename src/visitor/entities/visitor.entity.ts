@@ -48,6 +48,13 @@ export class Visitor {
   cuit: string;
 
   @ApiProperty({
+    description: 'Visitor EMAIL',
+    example: 'john.doe@example.com',
+  })
+  @Column({ name: 'EMAIL', nullable: false, length: 255 })
+  email: string;
+
+  @ApiProperty({
     description: 'Creation date',
     example: '2024-01-01T00:00:00.000Z',
   })
