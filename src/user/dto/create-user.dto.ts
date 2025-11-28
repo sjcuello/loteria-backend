@@ -35,6 +35,20 @@ export class CreateUserDto {
   cuil?: string;
 
   @ApiProperty({
+    description: 'Username for login',
+    example: 'jperez',
+  })
+  @IsString()
+  username!: string;
+
+  @ApiProperty({
+    description: 'User password',
+    example: 'SecurePassword123!',
+  })
+  @IsString()
+  password!: string;
+
+  @ApiProperty({
     description: 'Role ID assigned to the user',
     example: 1,
   })

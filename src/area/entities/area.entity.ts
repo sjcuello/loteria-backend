@@ -29,7 +29,7 @@ export class Area {
     description: 'Area description',
     example: 'Manages employee relations and recruitment',
   })
-  @Column({ name: 'DESCRIPCION', nullable: true, type: 'text' })
+  @Column({ name: 'DESCRIPCION', nullable: true, type: 'clob' })
   description: string;
 
   @ApiProperty({

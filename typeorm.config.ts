@@ -6,12 +6,24 @@ import { Role } from './src/role/entities/role.entity';
 import { Panel } from './src/panel/entities/panel.entity';
 import { PanelModule } from './src/panel-module/entities/panel-module.entity';
 import { Visitor } from './src/visitor/entities/visitor.entity';
+import { Area } from './src/area/entities/area.entity';
+import { ControlAudit } from './src/control-audit/entities/control-audit.entity';
+import { InternalNotification } from './src/internal-notification/entities/internal-notification.entity';
 
 dotenv.config();
 
 const configService = new ConfigService();
 
-const entities = [Visitor, Panel, PanelModule, Role, User];
+const entities = [
+  Visitor,
+  Panel,
+  PanelModule,
+  Role,
+  User,
+  Area,
+  ControlAudit,
+  InternalNotification,
+];
 
 export default new DataSource({
   type: 'oracle',

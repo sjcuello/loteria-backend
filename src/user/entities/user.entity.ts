@@ -64,6 +64,29 @@ export class User {
   cuil: string;
 
   @ApiProperty({
+    description: 'Username for login',
+    example: 'jperez',
+    required: true,
+  })
+  @Column({
+    name: 'USERNAME',
+    length: 100,
+    unique: true,
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'User password (hashed)',
+    example: 'hashedPassword123',
+    required: true,
+  })
+  @Column({
+    name: 'PASSWORD',
+    length: 255,
+  })
+  password: string;
+
+  @ApiProperty({
     description: 'User role',
     type: () => Role,
   })

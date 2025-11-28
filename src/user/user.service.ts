@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Role } from '../role/entities/role.entity';
 import { CuitCuilUtils } from '../shared/validators/cuit-cuil.validator';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
     private userRepo: Repository<User>,
     @InjectRepository(Role)
     private roleRepo: Repository<Role>,
+    private authService: AuthService,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -59,11 +61,18 @@ export class UserService {
       );
     }
 
+    // Hash the password
+    const hashedPassword = await this.authService.hashPassword(
+      createUserDto.password,
+    );
+
     const user = this.userRepo.create({
-      name: createUserDto.name as string,
-      lastName: createUserDto.lastName as string,
-      dni: createUserDto.dni as string,
+      name: createUserDto.name,
+      lastName: createUserDto.lastName,
+      dni: createUserDto.dni,
       cuil: createUserDto.cuil ?? '',
+      username: createUserDto.username,
+      password: hashedPassword,
       role,
       isActive: createUserDto.isActive ? 1 : 0,
       createdAt: new Date(),
@@ -87,18 +96,18 @@ export class UserService {
     const user = await this.findOne(id);
 
     if (updateUserDto.name !== undefined && updateUserDto.name !== null) {
-      user.name = updateUserDto.name as string;
+      user.name = updateUserDto.name;
     }
 
     if (
       updateUserDto.lastName !== undefined &&
       updateUserDto.lastName !== null
     ) {
-      user.lastName = updateUserDto.lastName as string;
+      user.lastName = updateUserDto.lastName;
     }
 
     if (updateUserDto.dni !== undefined && updateUserDto.dni !== null) {
-      user.dni = updateUserDto.dni as string;
+      user.dni = updateUserDto.dni;
     }
 
     if (updateUserDto.cuil !== undefined && updateUserDto.cuil !== null) {

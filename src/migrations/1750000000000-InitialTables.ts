@@ -71,6 +71,8 @@ export class InitialTables1750000000000 implements MigrationInterface {
         "ROL_ID" number,
         "AREA_ID" number,
         "ACTIVO" NUMBER(1) DEFAULT 1 NOT NULL,
+        "USERNAME" VARCHAR2(100) UNIQUE,
+        "PASSWORD" VARCHAR2(255),
         "FEC_ALTA" DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
         "USR_ALTA" NUMBER,
         "FEC_MODIF" DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -182,10 +184,31 @@ export class InitialTables1750000000000 implements MigrationInterface {
       INSERT INTO "T_ROLES" ("ID_ROLES", "NOMBRE") VALUES (4, 'Visitante')
     `);
 
-    // Insert default user (you may want to change these credentials)
+    // Insert default areas
     await queryRunner.query(`
-      INSERT INTO "T_USUARIOS" ("ID_USUARIOS", "NOMBRE", "APELLIDO", "DNI", "CUIL", "ROL_ID", "ACTIVO") 
-      VALUES (1, 'Admin', 'User', '38329696', '20-38329696-0', 3, 1)
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (1, 'Contable', 'Área de Contabilidad', 'CONT')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (2, 'Administration', 'Área de Administración', 'ADM')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (3, 'Sistemas', 'Área de Sistemas', 'SIS')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (4, 'Rrhh', 'Área de Recursos Humanos', 'RRHH')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (5, 'Gerencia', 'Área de Gerencia', 'GER')
+    `);
+    await queryRunner.query(`
+      INSERT INTO "T_AREA" ("ID_AREA", "NOMBRE", "DESCRIPCION", "CODIGO_AREA") VALUES (6, 'Set', 'Área de Set', 'SET')
+    `);
+
+    // Insert default user (you may want to change these credentials)
+    // Default credentials: username: admin, password: admin123
+    await queryRunner.query(`
+      INSERT INTO "T_USUARIOS" ("ID_USUARIOS", "NOMBRE", "APELLIDO", "DNI", "CUIL", "ROL_ID", "ACTIVO", "USERNAME", "PASSWORD", "AREA_ID") 
+      VALUES (1, 'Admin', 'User', '38329696', '20-38329696-0', 3, 1, 'admin', '$2b$10$.AxQcZXK9HdTUJso.Hx2NehM7xH86wB4rJz5Dyn0GkEcbgp9of/HW', 3)
     `);
   }
 

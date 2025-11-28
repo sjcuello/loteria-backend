@@ -18,9 +18,11 @@ import {
 import { InternalNotificationModule } from './internal-notification/internal-notification.module';
 import { VisitorModule } from './visitor/visitor.module';
 import { AreaModule } from './area/area.module';
+import { AuthModule } from './auth/auth.module';
 
 const modules = [
   AreaModule,
+  AuthModule,
   ControlAuditModule,
   DatabaseModule,
   HealthModule,

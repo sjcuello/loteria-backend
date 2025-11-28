@@ -1,7 +1,8 @@
 export interface RoleData {
   id: number;
   name: string;
-  isActive: number;
+  description?: string;
+  isActive?: number;
 }
 
 export interface PanelData {
@@ -18,10 +19,20 @@ export interface PanelModuleData {
   panelId: number;
 }
 
+export interface AreaData {
+  id: number;
+  name: string;
+  description?: string | null;
+  codeArea: string;
+  isActive?: number;
+  createdAt?: Date;
+}
+
 export interface JsonData {
   role?: RoleData[];
   panel?: PanelData[];
   panel_module?: PanelModuleData[];
+  area?: AreaData[];
 }
 
 export interface SeedConfig<T> {
