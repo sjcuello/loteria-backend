@@ -35,11 +35,32 @@ export class MailService {
   }
 
   /**
+   * Generate QR code as buffer for email attachments
+   */
+  private async generateQRCodeBuffer(code: string): Promise<Buffer> {
+    try {
+      const qrBuffer = await QRCode.toBuffer(code, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF',
+        },
+        type: 'png',
+      });
+      return qrBuffer;
+    } catch (error) {
+      this.logger.error('Error generating QR code buffer:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Send email with QR code
    */
   async sendEmailWithQR(dto: SendQRCodeEmailDto): Promise<void> {
     try {
-      const qrCodeDataUrl = await this.generateQRCode(dto.code);
+      const qrCodeBuffer = await this.generateQRCodeBuffer(dto.code);
 
       await this.mailerService.sendMail({
         to: dto.email,
@@ -95,7 +116,7 @@ export class MailService {
                 <p>${dto.message || 'Aquí está tu código de acceso:'}</p>
                 <div class="code">${dto.code}</div>
                 <div class="qr-container">
-                  <img src="${qrCodeDataUrl}" alt="QR Code" style="display: block; max-width: 100%;" />
+                  <img src="cid:qrcode" alt="QR Code" style="display: block; max-width: 100%;" />
                 </div>
                 <p>Escanea este código QR para acceder a tu información.</p>
                 <div class="footer">
@@ -105,6 +126,13 @@ export class MailService {
             </body>
           </html>
         `,
+        attachments: [
+          {
+            filename: 'qrcode.png',
+            content: qrCodeBuffer,
+            cid: 'qrcode',
+          },
+        ],
       });
 
       this.logger.log(`Email with QR code sent successfully to ${dto.email}`);
@@ -119,7 +147,7 @@ export class MailService {
    */
   async sendTicketEmail(dto: SendTicketEmailDto): Promise<void> {
     try {
-      const qrCodeDataUrl = await this.generateQRCode(dto.ticketCode);
+      const qrCodeBuffer = await this.generateQRCodeBuffer(dto.ticketCode);
 
       await this.mailerService.sendMail({
         to: dto.email,
@@ -214,7 +242,7 @@ export class MailService {
 
                 <div class="qr-section">
                   <p style="margin: 10px 0; color: #333;">Escanea en la entrada:</p>
-                  <img src="${qrCodeDataUrl}" alt="Ticket QR Code" style="max-width: 250px; display: block; margin: 15px auto;" />
+                  <img src="cid:qrcode" alt="Ticket QR Code" style="max-width: 250px; display: block; margin: 15px auto;" />
                   <div class="ticket-code">${dto.ticketCode}</div>
                 </div>
               </div>
@@ -225,6 +253,13 @@ export class MailService {
             </body>
           </html>
         `,
+        attachments: [
+          {
+            filename: 'ticket-qr.png',
+            content: qrCodeBuffer,
+            cid: 'qrcode',
+          },
+        ],
       });
 
       this.logger.log(`Ticket email sent successfully to ${dto.email}`);
@@ -386,7 +421,7 @@ export class MailService {
     },
   ): Promise<void> {
     try {
-      const qrCodeDataUrl = await this.generateQRCode(
+      const qrCodeBuffer = await this.generateQRCodeBuffer(
         appointmentDetails.appointmentCode,
       );
 
@@ -469,7 +504,7 @@ export class MailService {
 
                 <div class="qr-section">
                   <p>Presenta este código QR en tu cita:</p>
-                  <img src="${qrCodeDataUrl}" alt="Appointment QR Code" style="max-width: 250px;" />
+                  <img src="cid:qrcode" alt="Appointment QR Code" style="max-width: 250px;" />
                 </div>
 
                 <p>Por favor llega 10 minutos antes de tu cita.</p>
@@ -477,6 +512,13 @@ export class MailService {
             </body>
           </html>
         `,
+        attachments: [
+          {
+            filename: 'appointment-qr.png',
+            content: qrCodeBuffer,
+            cid: 'qrcode',
+          },
+        ],
       });
 
       this.logger.log(`Appointment confirmation email sent to ${email}`);
