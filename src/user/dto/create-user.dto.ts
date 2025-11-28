@@ -4,6 +4,37 @@ import { IsCuitCuil } from '../../shared/validators/cuit-cuil.validator';
 
 export class CreateUserDto {
   @ApiProperty({
+    description: 'User name',
+    example: 'Juan',
+  })
+  @IsString()
+  name!: string;
+
+  @ApiProperty({
+    description: 'User lastname',
+    example: 'Perez',
+  })
+  @IsString()
+  lastName!: string;
+
+  @ApiProperty({
+    description: 'User DNI',
+    example: '12345678',
+  })
+  @IsString()
+  dni!: string;
+
+  @ApiProperty({
+    description: 'User CUIL/CUIT',
+    example: '20-12345678-9',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @IsCuitCuil()
+  cuil?: string;
+
+  @ApiProperty({
     description: 'Role ID assigned to the user',
     example: 1,
   })
@@ -17,16 +48,6 @@ export class CreateUserDto {
   })
   @IsBoolean()
   isActive!: boolean;
-
-  @ApiProperty({
-    description: 'User CUIT',
-    example: '20-12345678-9',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  @IsCuitCuil()
-  cuil?: string;
 
   @ApiProperty({
     description: 'User ID who is creating this record',

@@ -43,6 +43,9 @@ export class InitialTables1750000000000 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "T_USUARIOS" (
         "ID_USUARIOS" number DEFAULT "SEQ_USUARIOS".NEXTVAL NOT NULL,
+        "NOMBRE" VARCHAR2(255) NOT NULL,
+        "APELLIDO" VARCHAR2(255) NOT NULL,
+        "DNI" VARCHAR2(255) NOT NULL,
         "CUIL" varchar2(255) UNIQUE,
         "ROL_ID" number,
         "ACTIVO" NUMBER(1) DEFAULT 1 NOT NULL,
@@ -148,8 +151,8 @@ export class InitialTables1750000000000 implements MigrationInterface {
 
     // Insert default user (you may want to change these credentials)
     await queryRunner.query(`
-      INSERT INTO "T_USUARIOS" ("ID_USUARIOS", "CUIL", "ROL_ID", "ACTIVO") 
-      VALUES (1, '20-38329696-0', 3, 1)
+      INSERT INTO "T_USUARIOS" ("ID_USUARIOS", "NOMBRE", "APELLIDO", "DNI", "CUIL", "ROL_ID", "ACTIVO") 
+      VALUES (1, 'Admin', 'User', '38329696', '20-38329696-0', 3, 1)
     `);
   }
 

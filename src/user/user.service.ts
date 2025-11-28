@@ -60,8 +60,11 @@ export class UserService {
     }
 
     const user = this.userRepo.create({
-      role,
+      name: createUserDto.name as string,
+      lastName: createUserDto.lastName as string,
+      dni: createUserDto.dni as string,
       cuil: createUserDto.cuil ?? '',
+      role,
       isActive: createUserDto.isActive ? 1 : 0,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -83,7 +86,22 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
-    if (updateUserDto.cuil !== undefined) {
+    if (updateUserDto.name !== undefined && updateUserDto.name !== null) {
+      user.name = updateUserDto.name as string;
+    }
+
+    if (
+      updateUserDto.lastName !== undefined &&
+      updateUserDto.lastName !== null
+    ) {
+      user.lastName = updateUserDto.lastName as string;
+    }
+
+    if (updateUserDto.dni !== undefined && updateUserDto.dni !== null) {
+      user.dni = updateUserDto.dni as string;
+    }
+
+    if (updateUserDto.cuil !== undefined && updateUserDto.cuil !== null) {
       user.cuil = updateUserDto.cuil;
     }
 
