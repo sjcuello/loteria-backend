@@ -13,7 +13,7 @@ export class ValidationTranslatorAudit {
     'fee-formula': 'fórmula del cánon',
     'fee-formula-history': 'historial de fórmula del cánon',
     'fee-formula-parameter': 'parámetros de fórmula del cánon',
-    holder: 'contribuyentes',
+    visitor: 'visitantes',
     panel: 'panel',
     'panel-module': 'submódulos',
     parameter: 'parámetros',

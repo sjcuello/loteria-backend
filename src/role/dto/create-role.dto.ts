@@ -11,6 +11,15 @@ export class CreateRoleDto {
   name!: string;
 
   @ApiProperty({
+    description: 'Role description',
+    example: 'Administrator role with full permissions',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({
     description: 'Role active status',
     example: 1,
     required: false,

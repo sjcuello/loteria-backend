@@ -18,9 +18,42 @@ export class User {
   id: number;
 
   @ApiProperty({
+    description: 'User name',
+    example: 'Juan',
+    required: true,
+  })
+  @Column({
+    name: 'NOMBRE',
+    length: 255,
+  })
+  name: string;
+
+  @ApiProperty({
+    description: 'User lastname',
+    example: 'Perez',
+    required: true,
+  })
+  @Column({
+    name: 'APELLIDO',
+    length: 255,
+  })
+  lastName: string;
+
+  @ApiProperty({
+    description: 'User DNI',
+    example: '12345678',
+    required: true,
+  })
+  @Column({
+    name: 'DNI',
+    length: 255,
+  })
+  dni: string;
+
+  @ApiProperty({
     description: 'User CUIL/CUIT',
     example: '20-12345678-9',
-    required: false,
+    required: true,
   })
   @Column({
     name: 'CUIL',

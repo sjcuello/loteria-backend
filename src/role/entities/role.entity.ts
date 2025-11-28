@@ -27,6 +27,13 @@ export class Role {
   name: string;
 
   @ApiProperty({
+    description: 'Role description',
+    example: 'Administrator role with full permissions',
+  })
+  @Column({ name: 'DESCRIPCION', nullable: true, length: 500 })
+  description: string;
+
+  @ApiProperty({
     description: 'Role active status (1 for active, 0 for inactive)',
     example: 1,
   })
