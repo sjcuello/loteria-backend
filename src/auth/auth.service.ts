@@ -12,9 +12,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async login(
-    loginDto: LoginDto,
-  ): Promise<{ user: Partial<User>; message: string; status: number }> {
+  async login(loginDto: LoginDto): Promise<Partial<User>> {
     const { username, password } = loginDto;
 
     // Find user by username
@@ -43,11 +41,7 @@ export class AuthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 
-    return {
-      user: userWithoutPassword as Partial<User>,
-      message: 'Login successful',
-      status: 200,
-    };
+    return userWithoutPassword;
   }
 
   async hashPassword(password: string): Promise<string> {
