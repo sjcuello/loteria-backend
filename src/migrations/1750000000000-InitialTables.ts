@@ -25,7 +25,7 @@ export class InitialTables1750000000000 implements MigrationInterface {
       `CREATE SEQUENCE "SEQ_AUDITORIA" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
-      `CREATE SEQUENCE "SEQ_VISITA" START WITH 1 INCREMENT BY 1`,
+      `CREATE SEQUENCE "SEQ_VISITA" START WITH 68943 INCREMENT BY 1`,
     );
 
     // Create role table first (referenced by user)

@@ -9,12 +9,14 @@ import { PaginatedResponse } from '../shared/interfaces/paginated-response.inter
 import { User } from '../user/entities/user.entity';
 import { Visitor } from '../visitor/entities/visitor.entity';
 import { AppointmentStatus } from './enums/appointment-status.enum';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectRepository(Appointment)
     private appointmentRepo: Repository<Appointment>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(
@@ -28,7 +30,7 @@ export class AppointmentService {
       isInstant: createAppointmentDto.isInstant ? 1 : 0,
       status:
         (createAppointmentDto.status as AppointmentStatus) ||
-        AppointmentStatus.APROBADO,
+        AppointmentStatus.PENDIENTE,
     };
 
     if (createAppointmentDto.endDate) {
@@ -57,7 +59,29 @@ export class AppointmentService {
     }
 
     const appointment = this.appointmentRepo.create(appointmentData);
-    return await this.appointmentRepo.save(appointment);
+    const savedAppointment = await this.appointmentRepo.save(appointment);
+
+    const appointmentWithVisitor = await this.appointmentRepo.findOne({
+      where: { id: savedAppointment.id },
+      relations: ['visitor'],
+    });
+
+    if (appointmentWithVisitor?.visitor?.email) {
+      try {
+        await this.mailService.sendEmailWithQR({
+          email: appointmentWithVisitor.visitor.email,
+          name: `${appointmentWithVisitor.visitor.name} ${appointmentWithVisitor.visitor.lastName}`,
+          code: savedAppointment.id.toString(),
+          subject: 'Recordatorio de visita',
+          message:
+            String(createAppointmentDto.reason) || 'Presentarse en recepción',
+        });
+      } catch (error) {
+        console.error('Failed to send appointment email:', error);
+      }
+    }
+
+    return savedAppointment;
   }
 
   async findAll(
@@ -174,7 +198,7 @@ export class AppointmentService {
     }
 
     if (updateAppointmentDto.status !== undefined) {
-      appointment.status = updateAppointmentDto.status as AppointmentStatus;
+      appointment.status = updateAppointmentDto.status;
     }
 
     if (updateAppointmentDto.updatedBy) {
