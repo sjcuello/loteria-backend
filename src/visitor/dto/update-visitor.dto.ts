@@ -1,9 +1,9 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateHolderDto } from './create-holder.dto';
+import { CreateVisitorDto } from './create-visitor.dto';
 import { IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateHolderDto extends PartialType(CreateHolderDto) {
+export class UpdateVisitorDto extends PartialType(CreateVisitorDto) {
   @ApiProperty({
     description: 'User ID who updated this record',
     example: 1,

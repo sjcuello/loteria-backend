@@ -10,20 +10,41 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
 
-@Entity('T_CONTRIBUYENTES')
-export class Holder {
+@Entity('T_VISITANTES')
+export class Visitor {
   @ApiProperty({
-    description: 'Unique holder ID',
+    description: 'Unique visitor ID',
     example: 1,
   })
-  @PrimaryGeneratedColumn({ name: 'ID_CONTRIBUYENTES' })
+  @PrimaryGeneratedColumn({ name: 'ID_VISITANTE' })
   id: number;
 
   @ApiProperty({
-    description: 'Holder CUIT',
+    description: 'Visitor NAME',
+    example: 'John',
+  })
+  @Column({ name: 'NOMBRE', nullable: false, length: 255 })
+  name: string;
+
+  @ApiProperty({
+    description: 'Visitor LAST NAME',
+    example: 'Doe',
+  })
+  @Column({ name: 'APELLIDO', nullable: false, length: 255 })
+  lastName: string;
+
+  @ApiProperty({
+    description: 'Visitor DNI',
+    example: '12345678',
+  })
+  @Column({ name: 'DNI', nullable: false, unique: true, length: 255 })
+  dni: string;
+
+  @ApiProperty({
+    description: 'Visitor CUIT',
     example: '20-12345678-9',
   })
-  @Column({ name: 'CUIT', nullable: false, unique: true, length: 255 })
+  @Column({ name: 'CUIT', nullable: false, length: 255 })
   cuit: string;
 
   @ApiProperty({

@@ -32,6 +32,7 @@ export class RoleService {
 
     const roleData: Partial<Role> = {
       name: createRoleDto.name,
+      description: createRoleDto.description,
       isActive: createRoleDto.isActive ? 1 : 0,
     };
 
@@ -61,6 +62,10 @@ export class RoleService {
 
     if (updateRoleDto.name !== undefined) {
       role.name = updateRoleDto.name;
+    }
+
+    if (updateRoleDto.description !== undefined) {
+      role.description = updateRoleDto.description;
     }
 
     if (updateRoleDto.isActive !== undefined) {

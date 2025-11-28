@@ -8,7 +8,7 @@ export class SwaggerConfigService {
       .setTitle(config.title)
       .setDescription(config.description)
       .setVersion(config.version)
-      .addTag('holders', 'Operations related to holders')
+      .addTag('visitors', 'Operations related to visitors')
       .addTag('panels', 'Operations related to panels')
       .addTag('panel-modules', 'Operations related to panel modules')
       .addTag('roles', 'Operations related to roles')
