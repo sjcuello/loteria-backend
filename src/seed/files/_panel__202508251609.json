@@ -1,0 +1,15 @@
+{
+"panel": [
+	{
+		"id" : 1,
+		"name" : "Panel de Administración",
+		"isActive" : 1,
+		"roleId" : 1
+	},
+	{
+		"id" : 2,
+		"name" : "Panel Gerencial",
+		"isActive" : 1,
+		"roleId" : 1
+	}
+]}

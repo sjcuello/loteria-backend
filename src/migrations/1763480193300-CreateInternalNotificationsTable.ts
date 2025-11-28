@@ -1,0 +1,64 @@
+import { MigrationInterface, QueryRunner } from 'typeorm';
+
+export class CreateInternalNotificationsTable1763480193300
+  implements MigrationInterface
+{
+  name = 'CreateInternalNotificationsTable1763480193300';
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE SEQUENCE "SEQ_NOTIFICACIONES_INTERNAS" START WITH 1 INCREMENT BY 1`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "T_NOTIFICACIONES_INTERNAS" (
+      "ID_NOTIFICACION" number DEFAULT "SEQ_NOTIFICACIONES_INTERNAS".NEXTVAL NOT NULL,
+      "TITULO" varchar2(255) NOT NULL,
+      "MENSAJE" clob NOT NULL,
+      "TIPO" varchar2(50) NOT NULL,
+      "LEIDA" number DEFAULT 0 NOT NULL,
+      "USUARIO_ID" number NOT NULL,
+      "FEC_ALTA" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      "USR_ALTA" number,
+      "FEC_MODIF" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      "USR_MODIF" number,
+      "HABILITADO" number DEFAULT 1 NOT NULL,
+      CONSTRAINT "PK_NOTIFICACIONES_INTERNAS" PRIMARY KEY ("ID_NOTIFICACION"),
+      CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_USUARIO" FOREIGN KEY ("USUARIO_ID") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
+      CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_CREATED_BY" FOREIGN KEY ("USR_ALTA") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
+      CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_UPDATED_BY" FOREIGN KEY ("USR_MODIF") REFERENCES "T_USUARIOS" ("ID_USUARIOS")
+      )`,
+    );
+
+    await queryRunner.query(
+      `CREATE INDEX "IDX_NOTIFICACIONES_INTERNAS_USUARIO" ON "T_NOTIFICACIONES_INTERNAS" ("USUARIO_ID")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_NOTIFICACIONES_INTERNAS_LEIDA" ON "T_NOTIFICACIONES_INTERNAS" ("LEIDA")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_NOTIFICACIONES_INTERNAS_HABILITADO" ON "T_NOTIFICACIONES_INTERNAS" ("HABILITADO")`,
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `DROP INDEX "IDX_NOTIFICACIONES_INTERNAS_HABILITADO"`,
+    );
+    await queryRunner.query(`DROP INDEX "IDX_NOTIFICACIONES_INTERNAS_LEIDA"`);
+    await queryRunner.query(`DROP INDEX "IDX_NOTIFICACIONES_INTERNAS_USUARIO"`);
+    await queryRunner.query(
+      `ALTER TABLE "T_NOTIFICACIONES_INTERNAS" DROP CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_UPDATED_BY"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "T_NOTIFICACIONES_INTERNAS" DROP CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_CREATED_BY"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "T_NOTIFICACIONES_INTERNAS" DROP CONSTRAINT "FK_NOTIFICACIONES_INTERNAS_USUARIO"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "T_NOTIFICACIONES_INTERNAS" DROP CONSTRAINT "PK_NOTIFICACIONES_INTERNAS"`,
+    );
+    await queryRunner.query(`DROP TABLE "T_NOTIFICACIONES_INTERNAS"`);
+    await queryRunner.query(`DROP SEQUENCE "SEQ_NOTIFICACIONES_INTERNAS"`);
+  }
+}

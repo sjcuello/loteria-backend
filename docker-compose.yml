@@ -1,0 +1,40 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-free
+    container_name: loteria-oracle-db
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: root
+      APP_USER: LOTERIA
+      APP_USER_PASSWORD: root
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "LOTERIA/root@loteria-oracle-db:1521/FREEPDB1", "@/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  backend:
+    build:
+      context: .
+    container_name: loteria-backend
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "oracle://LOTERIA:root@loteria-oracle-db:1521/FREEPDB1"
+      DB_USER: LOTERIA
+      DB_PASSWORD: root
+      DB_HOST: loteria-oracle-db
+      DB_PORT: 1521
+      DB_SERVICE: FREEPDB1
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+
+volumes:
+  oracle-data:
