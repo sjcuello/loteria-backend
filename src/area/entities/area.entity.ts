@@ -1,86 +1,46 @@
+import { User } from '../../user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '../../role/entities/role.entity';
-import { Area } from '../../area/entities/area.entity';
 
-@Entity('T_USUARIOS')
-export class User {
+@Entity('T_AREA')
+export class Area {
   @ApiProperty({
-    description: 'Unique user ID',
+    description: 'Unique area ID',
     example: 1,
   })
-  @PrimaryGeneratedColumn({ name: 'ID_USUARIOS' })
+  @PrimaryGeneratedColumn({ name: 'ID_AREA' })
   id: number;
 
   @ApiProperty({
-    description: 'User name',
-    example: 'Juan',
-    required: true,
+    description: 'Area name',
+    example: 'Human Resources',
   })
-  @Column({
-    name: 'NOMBRE',
-    length: 255,
-  })
+  @Column({ name: 'NOMBRE', nullable: false, length: 255 })
   name: string;
 
   @ApiProperty({
-    description: 'User lastname',
-    example: 'Perez',
-    required: true,
+    description: 'Area description',
+    example: 'Manages employee relations and recruitment',
   })
-  @Column({
-    name: 'APELLIDO',
-    length: 255,
-  })
-  lastName: string;
+  @Column({ name: 'DESCRIPCION', nullable: true, type: 'text' })
+  description: string;
 
   @ApiProperty({
-    description: 'User DNI',
-    example: '12345678',
-    required: true,
+    description: 'Area code',
+    example: 'HR',
   })
-  @Column({
-    name: 'DNI',
-    length: 255,
-  })
-  dni: string;
+  @Column({ name: 'CODIGO_AREA', nullable: false, length: 50, unique: true })
+  codeArea: string;
 
   @ApiProperty({
-    description: 'User CUIL/CUIT',
-    example: '20-12345678-9',
-    required: true,
-  })
-  @Column({
-    name: 'CUIL',
-    length: 255,
-    unique: true,
-  })
-  cuil: string;
-
-  @ApiProperty({
-    description: 'User role',
-    type: () => Role,
-  })
-  @ManyToOne(() => Role, { nullable: true })
-  @JoinColumn({ name: 'ROL_ID' })
-  role: Role;
-
-  @ApiProperty({
-    description: 'User area',
-    type: () => Area,
-  })
-  @ManyToOne(() => Area, area => area.users, { nullable: true })
-  @JoinColumn({ name: 'AREA_ID' })
-  area: Area;
-
-  @ApiProperty({
-    description: 'User active status (1 for active, 0 for inactive)',
+    description: 'Area active status (1 for active, 0 for inactive)',
     example: 1,
   })
   @Column({
@@ -93,7 +53,7 @@ export class User {
   isActive: number;
 
   @ApiProperty({
-    description: 'User creation date',
+    description: 'Creation date',
     example: '2024-01-15T10:30:00.000Z',
   })
   @Column({
@@ -135,7 +95,14 @@ export class User {
   updatedBy: User;
 
   @ApiProperty({
-    description: 'User active status as boolean',
+    description: 'Users in this area',
+    type: () => [User],
+  })
+  @OneToMany(() => User, user => user.area)
+  users: User[];
+
+  @ApiProperty({
+    description: 'Area active status as boolean',
     example: true,
   })
   get active(): boolean {

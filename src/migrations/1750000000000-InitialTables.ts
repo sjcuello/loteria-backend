@@ -10,6 +10,9 @@ export class InitialTables1750000000000 implements MigrationInterface {
       `CREATE SEQUENCE "SEQ_ROLES" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
+      `CREATE SEQUENCE "SEQ_AREA" START WITH 1 INCREMENT BY 1`,
+    );
+    await queryRunner.query(
       `CREATE SEQUENCE "SEQ_VISITANTES" START WITH 1 INCREMENT BY 1`,
     );
     await queryRunner.query(
@@ -39,6 +42,24 @@ export class InitialTables1750000000000 implements MigrationInterface {
       )
     `);
 
+    // Create area table
+    await queryRunner.query(`
+      CREATE TABLE "T_AREA" (
+        "ID_AREA" NUMBER DEFAULT "SEQ_AREA".NEXTVAL NOT NULL,
+        "NOMBRE" VARCHAR2(255) NOT NULL,
+        "DESCRIPCION" CLOB,
+        "CODIGO_AREA" VARCHAR2(50) NOT NULL,
+        "ACTIVO" NUMBER(1) DEFAULT 1 NOT NULL,
+        "FEC_ALTA" DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "USR_ALTA" NUMBER,
+        "FEC_MODIF" DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "USR_MODIF" NUMBER,
+        CONSTRAINT "PK_AREA" PRIMARY KEY ("ID_AREA"),
+        CONSTRAINT "UQ_AREA_CODIGO" UNIQUE ("CODIGO_AREA"),
+        CONSTRAINT "CHK_AREA_ACTIVO" CHECK ("ACTIVO" IN (0, 1))
+      )
+    `);
+
     // Create user table
     await queryRunner.query(`
       CREATE TABLE "T_USUARIOS" (
@@ -48,6 +69,7 @@ export class InitialTables1750000000000 implements MigrationInterface {
         "DNI" VARCHAR2(255) NOT NULL,
         "CUIL" varchar2(255) UNIQUE,
         "ROL_ID" number,
+        "AREA_ID" number,
         "ACTIVO" NUMBER(1) DEFAULT 1 NOT NULL,
         "FEC_ALTA" DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
         "USR_ALTA" NUMBER,
@@ -56,9 +78,20 @@ export class InitialTables1750000000000 implements MigrationInterface {
         CONSTRAINT "PK_USUARIOS" PRIMARY KEY ("ID_USUARIOS"),
         CONSTRAINT "CHK_USUARIOS_ACTIVO" CHECK ("ACTIVO" IN (0, 1)),
         CONSTRAINT "FK_USUARIOS_ROLES" FOREIGN KEY ("ROL_ID") REFERENCES "T_ROLES" ("ID_ROLES"),
+        CONSTRAINT "FK_USUARIOS_AREA" FOREIGN KEY ("AREA_ID") REFERENCES "T_AREA" ("ID_AREA"),
         CONSTRAINT "FK_USUARIOS_USUARIOS_ALTA" FOREIGN KEY ("USR_ALTA") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
         CONSTRAINT "FK_USUARIOS_USUARIOS_MODIF" FOREIGN KEY ("USR_MODIF") REFERENCES "T_USUARIOS" ("ID_USUARIOS")
       )
+    `);
+
+    // Add foreign key constraints to T_AREA after T_USUARIOS is created
+    await queryRunner.query(`
+      ALTER TABLE "T_AREA" ADD CONSTRAINT "FK_AREA_USUARIOS_ALTA" 
+      FOREIGN KEY ("USR_ALTA") REFERENCES "T_USUARIOS" ("ID_USUARIOS")
+    `);
+    await queryRunner.query(`
+      ALTER TABLE "T_AREA" ADD CONSTRAINT "FK_AREA_USUARIOS_MODIF" 
+      FOREIGN KEY ("USR_MODIF") REFERENCES "T_USUARIOS" ("ID_USUARIOS")
     `);
 
     // Create panel table
@@ -159,15 +192,19 @@ export class InitialTables1750000000000 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop tables in reverse order (respecting foreign key constraints)
     await queryRunner.query(`DROP TABLE "T_AUDITORIA"`);
+    await queryRunner.query(`DROP TABLE "T_VISITANTES"`);
     await queryRunner.query(`DROP TABLE "T_MODULOS_PANEL"`);
     await queryRunner.query(`DROP TABLE "T_PANELES"`);
     await queryRunner.query(`DROP TABLE "T_USUARIOS"`);
+    await queryRunner.query(`DROP TABLE "T_AREA"`);
     await queryRunner.query(`DROP TABLE "T_ROLES"`);
 
     // Drop sequences
     await queryRunner.query(`DROP SEQUENCE "SEQ_AUDITORIA"`);
+    await queryRunner.query(`DROP SEQUENCE "SEQ_VISITANTES"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_MODULOS_PANEL"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_PANELES"`);
+    await queryRunner.query(`DROP SEQUENCE "SEQ_AREA"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_ROLES"`);
     await queryRunner.query(`DROP SEQUENCE "SEQ_USUARIOS"`);
   }
