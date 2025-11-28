@@ -24,6 +24,9 @@ export class InitialTables1750000000000 implements MigrationInterface {
     await queryRunner.query(
       `CREATE SEQUENCE "SEQ_AUDITORIA" START WITH 1 INCREMENT BY 1`,
     );
+    await queryRunner.query(
+      `CREATE SEQUENCE "SEQ_VISITA" START WITH 1 INCREMENT BY 1`,
+    );
 
     // Create role table first (referenced by user)
     await queryRunner.query(`
@@ -169,6 +172,32 @@ export class InitialTables1750000000000 implements MigrationInterface {
         CONSTRAINT "CHK_AUDITORIA_ESTADO" CHECK ("ESTADO" IN (0, 1))
       )
     `);
+
+    await queryRunner.query(
+      `CREATE TABLE "T_VISITA" (
+      "ID_VISITA" number DEFAULT "SEQ_VISITA".NEXTVAL NOT NULL,
+      "VISITANTE_ID" number NOT NULL,
+      "MOTIVO" clob NOT NULL,
+      "USER_ID" number NOT NULL,
+      "FECHA_INICIO" timestamp NOT NULL,
+      "FECHA_FIN" timestamp,
+      "ES_INSTANTANEA" number DEFAULT 0 NOT NULL,
+      "FECHA_INICIO_EFECTIVA" timestamp,
+      "FECHA_FIN_EFECTIVA" timestamp,
+      "APROBADO" number DEFAULT 0 NOT NULL,
+      "APROBADO_POR" number,
+      "FEC_ALTA" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      "USR_ALTA" number,
+      "FEC_MODIF" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+      "USR_MODIF" number,
+      CONSTRAINT "PK_VISITA" PRIMARY KEY ("ID_VISITA"),
+      CONSTRAINT "FK_VISITA_VISITANTE" FOREIGN KEY ("VISITANTE_ID") REFERENCES "T_VISITANTES" ("ID_VISITANTE"),
+      CONSTRAINT "FK_VISITA_USER" FOREIGN KEY ("USER_ID") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
+      CONSTRAINT "FK_VISITA_APROBADO_POR" FOREIGN KEY ("APROBADO_POR") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
+      CONSTRAINT "FK_VISITA_CREATED_BY" FOREIGN KEY ("USR_ALTA") REFERENCES "T_USUARIOS" ("ID_USUARIOS"),
+      CONSTRAINT "FK_VISITA_UPDATED_BY" FOREIGN KEY ("USR_MODIF") REFERENCES "T_USUARIOS" ("ID_USUARIOS")
+      )`,
+    );
 
     // Insert default roles from seed file
     await queryRunner.query(`
