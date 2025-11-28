@@ -22,6 +22,7 @@ export class VisitorService {
       lastName: String(createVisitorDto.lastName),
       dni: String(createVisitorDto.dni),
       cuit: String(createVisitorDto.cuit ?? ''),
+      email: String(createVisitorDto.email),
     };
 
     if (createVisitorDto.createdBy) {
@@ -98,6 +99,10 @@ export class VisitorService {
       visitor.cuit = String(updateVisitorDto.cuit);
     }
 
+    if (updateVisitorDto.email !== undefined) {
+      visitor.email = String(updateVisitorDto.email);
+    }
+
     if (updateVisitorDto.updatedBy) {
       visitor.updatedBy = { id: updateVisitorDto.updatedBy } as User;
     }
@@ -115,12 +120,14 @@ export class VisitorService {
     APELLIDO?: string;
     DNI?: string;
     CUIT?: string;
+    EMAIL?: string;
   }): Partial<Visitor> => {
     return {
       name: raw.NOMBRE ?? '',
       lastName: raw.APELLIDO ?? '',
       dni: raw.DNI ?? '',
       cuit: raw.CUIT ?? '',
+      email: raw.EMAIL ?? '',
     };
   };
 }

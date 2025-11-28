@@ -8,6 +8,7 @@ import { PaginationDto } from '../shared/dto/pagination.dto';
 import { PaginatedResponse } from '../shared/interfaces/paginated-response.interface';
 import { User } from '../user/entities/user.entity';
 import { Visitor } from '../visitor/entities/visitor.entity';
+import { AppointmentStatus } from './enums/appointment-status.enum';
 
 @Injectable()
 export class AppointmentService {
@@ -25,7 +26,9 @@ export class AppointmentService {
       user: { id: createAppointmentDto.userId } as User,
       startDate: new Date(createAppointmentDto.startDate),
       isInstant: createAppointmentDto.isInstant ? 1 : 0,
-      isApproved: createAppointmentDto.isApproved ? 1 : 0,
+      status:
+        (createAppointmentDto.status as AppointmentStatus) ||
+        AppointmentStatus.APROBADO,
     };
 
     if (createAppointmentDto.endDate) {
@@ -42,12 +45,6 @@ export class AppointmentService {
       appointmentData.effectiveEndDate = new Date(
         createAppointmentDto.effectiveEndDate,
       );
-    }
-
-    if (createAppointmentDto.approvedById) {
-      appointmentData.approvedBy = {
-        id: createAppointmentDto.approvedById,
-      } as User;
     }
 
     if (createAppointmentDto.createdBy) {
@@ -70,14 +67,7 @@ export class AppointmentService {
     const skip = (page - 1) * limit;
 
     const [data, total] = await this.appointmentRepo.findAndCount({
-      relations: [
-        'visitor',
-        'user',
-        'user.area',
-        'approvedBy',
-        'createdBy',
-        'updatedBy',
-      ],
+      relations: ['visitor', 'user', 'user.area', 'createdBy', 'updatedBy'],
       skip,
       take: limit,
       order: {
@@ -91,14 +81,7 @@ export class AppointmentService {
   async findOne(id: number): Promise<Appointment> {
     const appointment = await this.appointmentRepo.findOne({
       where: { id },
-      relations: [
-        'visitor',
-        'user',
-        'user.area',
-        'approvedBy',
-        'createdBy',
-        'updatedBy',
-      ],
+      relations: ['visitor', 'user', 'user.area', 'createdBy', 'updatedBy'],
     });
 
     if (!appointment) {
@@ -117,14 +100,7 @@ export class AppointmentService {
 
     const [data, total] = await this.appointmentRepo.findAndCount({
       where: { visitor: { id: visitorId } },
-      relations: [
-        'visitor',
-        'user',
-        'user.area',
-        'approvedBy',
-        'createdBy',
-        'updatedBy',
-      ],
+      relations: ['visitor', 'user', 'user.area', 'createdBy', 'updatedBy'],
       skip,
       take: limit,
       order: {
@@ -144,14 +120,7 @@ export class AppointmentService {
 
     const [data, total] = await this.appointmentRepo.findAndCount({
       where: { user: { id: userId } },
-      relations: [
-        'visitor',
-        'user',
-        'user.area',
-        'approvedBy',
-        'createdBy',
-        'updatedBy',
-      ],
+      relations: ['visitor', 'user', 'user.area', 'createdBy', 'updatedBy'],
       skip,
       take: limit,
       order: {
@@ -204,14 +173,8 @@ export class AppointmentService {
       );
     }
 
-    if (updateAppointmentDto.isApproved !== undefined) {
-      appointment.isApproved = updateAppointmentDto.isApproved ? 1 : 0;
-    }
-
-    if (updateAppointmentDto.approvedById !== undefined) {
-      appointment.approvedBy = {
-        id: updateAppointmentDto.approvedById,
-      } as User;
+    if (updateAppointmentDto.status !== undefined) {
+      appointment.status = updateAppointmentDto.status as AppointmentStatus;
     }
 
     if (updateAppointmentDto.updatedBy) {
@@ -228,15 +191,14 @@ export class AppointmentService {
 
   async approve(id: number, approvedById: number): Promise<Appointment> {
     const appointment = await this.findOne(id);
-    appointment.isApproved = 1;
-    appointment.approvedBy = { id: approvedById } as User;
+    appointment.status = AppointmentStatus.APROBADO;
     appointment.updatedBy = { id: approvedById } as User;
     return await this.appointmentRepo.save(appointment);
   }
 
   async reject(id: number, rejectedById: number): Promise<Appointment> {
     const appointment = await this.findOne(id);
-    appointment.isApproved = 0;
+    appointment.status = AppointmentStatus.RECHAZADO;
     appointment.updatedBy = { id: rejectedById } as User;
     return await this.appointmentRepo.save(appointment);
   }
